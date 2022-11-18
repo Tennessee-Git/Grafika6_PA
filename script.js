@@ -193,9 +193,9 @@ const setCoordsFromInputs = () => {
   beg.setY = begY.value ? begY.value : 10;
   end.setX = endX.value ? endX.value : 100;
   end.setY = endY.value ? endY.value : 100;
-  P1.setX = p1X.value ? p1X.value : 50;
-  P1.setY = p1Y.value ? p1Y.value : 50;
-  P2.setX = p2X.value ? p2X.value : 50;
+  P1.setX = p1X.value ? p1X.value : 100;
+  P1.setY = p1Y.value ? p1Y.value : 10;
+  P2.setX = p2X.value ? p2X.value : 10;
   P2.setY = p2Y.value ? p2Y.value : 100;
 };
 
@@ -230,34 +230,6 @@ function drawLine(e) {
 
   lastClick = [x, y];
 }
-
-begX.addEventListener("input", () => {
-  beg.setX = begX.value;
-});
-
-begY.addEventListener("input", () => {
-  beg.setY = begY.value;
-});
-
-endX.addEventListener("input", () => {
-  end.setX = endX.value;
-});
-
-endY.addEventListener("input", () => {
-  end.setY = endY.value;
-});
-
-p1X.addEventListener("input", () => {
-  P1.setX = p1X.value;
-});
-
-p1Y.addEventListener("input", () => {
-  P1.setY = p1Y.value;
-});
-
-p2X.addEventListener("input", () => {
-  P2.setX = p2X.value;
-});
 
 p2Y.addEventListener("input", () => {
   P2.setY = p2Y.value;
