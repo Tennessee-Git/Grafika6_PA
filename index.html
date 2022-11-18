@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grafika6_PA</title>
+    <script src="./script.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1 class="heading">Bezier Curve</h1>
+    <div class="tools">
+      <div class="tool">
+        <div class="inlineElement">
+          <label for="xBeg">beg</label>
+          <input
+            type="number"
+            class="shortInput"
+            name="xBeg"
+            id="xBeg"
+            placeholder="xPos"
+          />
+          <input
+            type="number"
+            class="shortInput"
+            name="yBeg"
+            id="yBeg"
+            placeholder="yPos"
+          />
+        </div>
+        <div class="inlineElement">
+          <label for="xEnd">end</label>
+          <input
+            type="number"
+            class="shortInput"
+            name="xEnd"
+            id="xEnd"
+            placeholder="xPos"
+          />
+          <input
+            type="number"
+            class="shortInput"
+            name="yEnd"
+            id="yEnd"
+            placeholder="yPos"
+          />
+        </div>
+      </div>
+      <div class="tool">
+        <div class="inlineElement">
+          <label for="xP1">P1</label>
+          <input
+            type="number"
+            class="shortInput"
+            name="xP1"
+            id="xP1"
+            placeholder="xPos"
+          />
+          <input
+            type="number"
+            class="shortInput"
+            name="yP1"
+            id="yP1"
+            placeholder="yPos"
+          />
+        </div>
+        <div class="inlineElement">
+          <label for="xP2">P2</label>
+          <input
+            type="number"
+            class="shortInput"
+            name="xP2"
+            id="xP2"
+            placeholder="xPos"
+          />
+          <input
+            type="number"
+            class="shortInput"
+            name="yP2"
+            id="yP2"
+            placeholder="yPos"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="centered">
+      <button class="clicks btn">Draw</button>
+    </div>
+    <canvas height="700px" width="1000px" id="canvas" class="canvas"></canvas>
+    <div class="coords">
+      <p id="xCoord">X: 0</p>
+      <p id="yCoord">Y: 0</p>
+    </div>
+  </body>
+</html>
