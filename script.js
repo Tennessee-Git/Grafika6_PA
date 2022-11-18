@@ -1,20 +1,3 @@
-let canvas = document.getElementById("canvas");
-let ctx;
-if (canvas.getContext) {
-  ctx = canvas.getContext("2d");
-}
-let xCoord = document.getElementById("xCoord");
-let yCoord = document.getElementById("yCoord");
-let begX = document.getElementById("xBeg");
-let begY = document.getElementById("yBeg");
-let endX = document.getElementById("xEnd");
-let endY = document.getElementById("yEnd");
-let p1X = document.getElementById("xP1");
-let p1Y = document.getElementById("yP1");
-let p2X = document.getElementById("xP2");
-let p2Y = document.getElementById("yP2");
-let drawButton = document.getElementById("draw");
-
 class Point {
   constructor(x, y) {
     this.x = x;
@@ -35,6 +18,28 @@ class Point {
     this.y = y;
   }
 }
+
+let canvas = document.getElementById("canvas");
+let ctx;
+if (canvas.getContext) {
+  ctx = canvas.getContext("2d");
+}
+let xCoord = document.getElementById("xCoord");
+let yCoord = document.getElementById("yCoord");
+let begX = document.getElementById("xBeg");
+let begY = document.getElementById("yBeg");
+let endX = document.getElementById("xEnd");
+let endY = document.getElementById("yEnd");
+let p1X = document.getElementById("xP1");
+let p1Y = document.getElementById("yP1");
+let p2X = document.getElementById("xP2");
+let p2Y = document.getElementById("yP2");
+let drawButton = document.getElementById("draw");
+let clickCheckbox = document.getElementById("click");
+
+let mx, my;
+let clicks = 0;
+let lastClick = [0, 0];
 
 let beg = new Point(-1, -1),
   end = new Point(-1, -1),
@@ -57,12 +62,6 @@ const getCursorPosition = (e) => {
       e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
   }
   return [x, y];
-};
-
-const calcDist = (x1, y1, x2, y2) => {
-  var xPart = Math.pow(x2 - x1, 2);
-  var yPart = Math.pow(y2 - y1, 2);
-  return Math.sqrt(xPart + yPart);
 };
 
 // Source: https://en.wikipedia.org/wiki/B%C3%A9zier_curve - Cubic Bezier Curves section
@@ -122,14 +121,115 @@ const drawControlPoints = () => {
 };
 
 const removeCanvasEventListeners = () => {
-  canvas.removeEventListener("click", drawLine);
-  canvas.removeEventListener("click", drawCircle);
-  canvas.removeEventListener("click", drawRectangleWithClicks);
-  canvas.removeEventListener("click", drawRectangleWithParams);
-  canvas.removeEventListener("mousedown", myMouseDown);
-  canvas.removeEventListener("mouseup", myMouseUp);
-  canvas.removeEventListener("mousemove", myMouseMove);
+  canvas.removeEventListener("mousemove", moveBeg);
+  canvas.removeEventListener("mousemove", moveEnd);
+  canvas.removeEventListener("mousemove", moveP1);
+  canvas.removeEventListener("mousemove", moveP2);
 };
+
+const calcDist = (x1, y1, x2, y2) => {
+  var xPart = Math.pow(x2 - x1, 2);
+  var yPart = Math.pow(y2 - y1, 2);
+  return Math.sqrt(xPart + yPart);
+};
+
+const checkPointClicked = () => {
+  let output = "null";
+  if (calcDist(mx, my, beg.getX, beg.getY) <= 5) {
+    output = "beg";
+  }
+  if (calcDist(mx, my, end.getX, end.getY) <= 5) {
+    output = "end";
+  }
+  if (calcDist(mx, my, P1.getX, P1.getY) <= 5) {
+    output = "p1";
+  }
+  if (calcDist(mx, my, P2.getX, P2.getY) <= 5) {
+    output = "p2";
+  }
+  return output;
+};
+
+const clearCanvasAndDraw = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawCurve();
+  drawControlPoints();
+};
+
+const moveBeg = (e) => {
+  mx = getCursorPosition(e)[0] - canvas.offsetLeft;
+  my = getCursorPosition(e)[1] - canvas.offsetTop;
+  beg.setX = mx;
+  beg.setY = my;
+  clearCanvasAndDraw();
+};
+
+const moveEnd = (e) => {
+  mx = getCursorPosition(e)[0] - canvas.offsetLeft;
+  my = getCursorPosition(e)[1] - canvas.offsetTop;
+  end.setX = mx;
+  end.setY = my;
+  clearCanvasAndDraw();
+};
+
+const moveP1 = (e) => {
+  mx = getCursorPosition(e)[0] - canvas.offsetLeft;
+  my = getCursorPosition(e)[1] - canvas.offsetTop;
+  P1.setX = mx;
+  P1.setY = my;
+  clearCanvasAndDraw();
+};
+
+const moveP2 = (e) => {
+  mx = getCursorPosition(e)[0] - canvas.offsetLeft;
+  my = getCursorPosition(e)[1] - canvas.offsetTop;
+  P2.setX = mx;
+  P2.setY = my;
+  clearCanvasAndDraw();
+};
+
+const setCoordsFromInputs = () => {
+  beg.setX = begX.value ? begX.value : 10;
+  beg.setY = begY.value ? begY.value : 10;
+  end.setX = endX.value ? endX.value : 100;
+  end.setY = endY.value ? endY.value : 100;
+  P1.setX = p1X.value ? p1X.value : 50;
+  P1.setY = p1Y.value ? p1Y.value : 50;
+  P2.setX = p2X.value ? p2X.value : 50;
+  P2.setY = p2Y.value ? p2Y.value : 100;
+};
+
+function drawLine(e) {
+  x = getCursorPosition(e)[0] - canvas.offsetLeft;
+  y = getCursorPosition(e)[1] - canvas.offsetTop;
+
+  if (clicks != 1) {
+    clicks++;
+  } else {
+    beg.setX = lastClick[0];
+    beg.setY = lastClick[1];
+    end.setX = x;
+    end.setY = y;
+    let xM = (lastClick[0] + x) / 2;
+    let yM = (lastClick[1] + y) / 2;
+
+    let xBegM = (lastClick[0] + xM) / 2;
+    let yBegM = (lastClick[1] + yM) / 2;
+
+    let xEndM = (x + xM) / 2;
+    let yEndM = (y + yM) / 2;
+
+    //find a better way to calculate P1 above line and P2 below line
+    P1.setX = xBegM;
+    P1.setY = yBegM;
+    P2.setX = xEndM;
+    P2.setY = yEndM;
+    clicks = 0;
+    clearCanvasAndDraw();
+  }
+
+  lastClick = [x, y];
+}
 
 begX.addEventListener("input", () => {
   beg.setX = begX.value;
@@ -164,14 +264,59 @@ p2Y.addEventListener("input", () => {
 });
 
 canvas.addEventListener("mousemove", (e) => {
-  var mx = getCursorPosition(e)[0] - canvas.offsetLeft;
-  var my = getCursorPosition(e)[1] - canvas.offsetTop;
+  mx = getCursorPosition(e)[0] - canvas.offsetLeft;
+  my = getCursorPosition(e)[1] - canvas.offsetTop;
   xCoord.innerText = "X: " + mx;
   yCoord.innerText = "Y: " + my;
 });
 
+canvas.addEventListener("mousedown", () => {
+  let clicked = checkPointClicked();
+  if (clicked === "beg") {
+    canvas.addEventListener("mousemove", moveBeg);
+  }
+  if (clicked === "end") {
+    canvas.addEventListener("mousemove", moveEnd);
+  }
+  if (clicked === "p1") {
+    canvas.addEventListener("mousemove", moveP1);
+  }
+  if (clicked === "p2") {
+    canvas.addEventListener("mousemove", moveP2);
+  }
+});
+
+canvas.addEventListener("mouseup", () => {
+  removeCanvasEventListeners();
+});
+
+clickCheckbox.addEventListener("change", () => {
+  if (clickCheckbox.checked) {
+    drawButton.disabled = true;
+    removeCanvasEventListeners();
+    canvas.addEventListener("click", drawLine);
+    canvas.addEventListener("mousedown", () => {
+      let clicked = checkPointClicked();
+      if (clicked === "beg") {
+        canvas.addEventListener("mousemove", moveBeg);
+      }
+      if (clicked === "end") {
+        canvas.addEventListener("mousemove", moveEnd);
+      }
+      if (clicked === "p1") {
+        canvas.addEventListener("mousemove", moveP1);
+      }
+      if (clicked === "p2") {
+        canvas.addEventListener("mousemove", moveP2);
+      }
+    });
+  } else {
+    drawButton.disabled = false;
+    canvas.removeEventListener("click", drawLine);
+  }
+});
+
 drawButton.addEventListener("click", () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawCurve();
-  drawControlPoints();
+  setCoordsFromInputs();
+  clearCanvasAndDraw();
 });

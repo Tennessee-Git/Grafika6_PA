@@ -20,6 +20,8 @@
             name="xBeg"
             id="xBeg"
             placeholder="xPos"
+            min="0"
+            max="1000"
           />
           <input
             type="number"
@@ -27,6 +29,8 @@
             name="yBeg"
             id="yBeg"
             placeholder="yPos"
+            min="0"
+            max="750"
           />
         </div>
         <div class="inlineElement">
@@ -37,6 +41,8 @@
             name="xEnd"
             id="xEnd"
             placeholder="xPos"
+            min="0"
+            max="1000"
           />
           <input
             type="number"
@@ -44,6 +50,8 @@
             name="yEnd"
             id="yEnd"
             placeholder="yPos"
+            min="0"
+            max="750"
           />
         </div>
       </div>
@@ -56,6 +64,8 @@
             name="xP1"
             id="xP1"
             placeholder="xPos"
+            min="0"
+            max="1000"
           />
           <input
             type="number"
@@ -63,6 +73,8 @@
             name="yP1"
             id="yP1"
             placeholder="yPos"
+            min="0"
+            max="750"
           />
         </div>
         <div class="inlineElement">
@@ -73,6 +85,8 @@
             name="xP2"
             id="xP2"
             placeholder="xPos"
+            min="0"
+            max="1000"
           />
           <input
             type="number"
@@ -80,11 +94,15 @@
             name="yP2"
             id="yP2"
             placeholder="yPos"
+            min="0"
+            max="750"
           />
         </div>
       </div>
     </div>
     <div class="centered">
+      <label for="click">Draw by hand</label>
+      <input type="checkbox" name="click" id="click" />
       <button class="clicks btn" id="draw">Draw</button>
     </div>
     <canvas height="750px" width="1000px" id="canvas" class="canvas"></canvas>
